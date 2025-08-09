@@ -12,7 +12,8 @@ export const metadata: Metadata = {
     default: APP_NAME, 
   },
    description: APP_DESCRIPTION,
- // metadataBase: new URL(SERVER_URL),
+   //VIDEO 10 Not sure why failing 
+  metadataBase: new URL(SERVER_URL),
 };
 
 export default function RootLayout({
