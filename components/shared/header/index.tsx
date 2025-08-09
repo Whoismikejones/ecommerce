@@ -18,25 +18,24 @@ const Header = () => {
               height={48}
               alt={`${APP_NAME} logo`}
             />
+            </Link>
             <span className='hidden lg:block font-bold text-2xl ml-3'>
-              {APP_NAME}
+            {APP_NAME}
             </span>
-          </Link>
+          
         </div>
-        <div className='space-x-2'>
-          <Button asChild variant='ghost'>
-            <Link href='/cart'>
-              <ShoppingCart />
-              Cart
+       <div className="space-x-2">
+        <Button asChild variant='ghost'>
+            <Link href = '/cart'>
+              <ShoppingCart /> Cart
             </Link>
-          </Button>
-          <Button asChild>
-            <Link href='/sign-in'>
-              <UserIcon />
-              Sign In
+        </Button>
+        <Button asChild variant='ghost'>
+            <Link href = '/sign-in'>
+              <UserIcon /> Sign-In
             </Link>
-          </Button>
-        </div>
+        </Button>
+       </div>
       </div>
     </header>
   );

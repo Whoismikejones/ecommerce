@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     default: APP_NAME, 
   },
    description: APP_DESCRIPTION,
-   //VIDEO 10 Not sure why failing 
+   
   metadataBase: new URL(SERVER_URL),
 };
 
