@@ -1,13 +1,20 @@
 import ProductList from '@/components/shared/product/product-list';
-import sampleData from '@/db/sample-data';
+import { getLatestProducts } from '@/lib/actions/product.actions';
 
-const Homepage = () => {
+
+
+//cards displayed need count from page.tsx and index.ts
+
+const Homepage  = async() => {
+  const latestProducts = await getLatestProducts();
   return (
     <>
       <ProductList
-      data={sampleData.products} 
-      title="Newest Arrivals"
-      limit={4} />
+      data={latestProducts} 
+      title='
+      Newest Arrivals'
+      limit={4}
+       />
     </>
   );
 };
