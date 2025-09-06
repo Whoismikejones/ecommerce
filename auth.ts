@@ -55,6 +55,7 @@ export const config = {
       },
     }),
   ],
+ 
 //   callbacks: {
 //     //...authConfig.callbacks,
 //     async session({ session, user, trigger, token }: any) {
@@ -62,7 +63,7 @@ export const config = {
 //         session.user.id = token.sub;
 //         //if there is an update, set the user name 
 //         if(trigger === 'update'){
-//             session.uset.name = user.name;
+//             session.user.name = user.name;
 //         }
 //         return session; 
 //     },
