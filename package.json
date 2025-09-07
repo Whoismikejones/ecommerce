@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@next/eslint-plugin-next": "^15.5.2",
     "@prisma/client": "^6.15.0",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/node": "^20",
@@ -42,6 +43,7 @@
     "bufferutil": "^4.0.9",
     "eslint": "^9",
     "eslint-config-next": "15.4.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "prisma": "^6.15.0",
     "tailwindcss": "^4.1.12",
     "tailwindcss-animate": "^1.0.7",

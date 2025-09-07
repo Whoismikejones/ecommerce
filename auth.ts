@@ -1,3 +1,4 @@
+import { AuthError } from 'next-auth';
 import NextAuth from 'next-auth';
 import type { NextAuthConfig } from 'next-auth';
 import { PrismaAdapter } from '@auth/prisma-adapter';
@@ -6,6 +7,15 @@ import { cookies } from 'next/headers';
 import { compareSync } from 'bcrypt-ts-edge';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
+// Custom error class for invalid credentials
+class InvalidCredentials extends AuthError {
+  public readonly kind = 'signIn';
+ 
+  constructor() {
+    super('Invalid credentials');
+    this.type = 'CredentialsSignin';
+  }
+}
 
 export const config = {
   pages: {
@@ -50,24 +60,41 @@ export const config = {
             };
           }
         }
+
+        
         // If user does not exist or password does not match return null
-        return null;
+        //return null;
+
+        // If user does not exist or password does not match, throw custom error
+            throw new InvalidCredentials();
       },
     }),
   ],
  
-//   callbacks: {
-//     //...authConfig.callbacks,
-//     async session({ session, user, trigger, token }: any) {
-//         //Set the user id from the token 
-//         session.user.id = token.sub;
-//         //if there is an update, set the user name 
-//         if(trigger === 'update'){
-//             session.user.name = user.name;
-//         }
-//         return session; 
-//     },
-//   },
+  callbacks: {
+    //...authConfig.callbacks,
+    
+    async session({ session, user, trigger, token }: any) {
+        //Set the user id from the token 
+        session.user.id = token.sub;
+        //if there is an update, set the user name 
+        if(trigger === 'update'){
+            session.user.name = user.name;
+        }
+        return session; 
+    },
+  },
+
+   logger: {
+      error: (error: Error) => {
+         // Don't log CredentialsSignin errors to avoid console spam
+         if (error.message.includes('Invalid credentials') || error.name === 'CredentialsSignin') {
+            return;
+         }
+         console.error('[auth][error]', error);
+      },
+   },
+
 }satisfies NextAuthConfig;
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);

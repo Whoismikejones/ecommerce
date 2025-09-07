@@ -4,12 +4,14 @@ import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { signIn, signOut } from '@/auth';
 import { signInFormSchema } from '../validators';
 
+
 // Sign in the user with credentials
 export async function signInWithCredentials(
   prevState: unknown,
   formData: FormData
 ) {
   try {
+    // Set user from form and validate it with Zod schema
     const user = signInFormSchema.parse({
       email: formData.get('email'),
       password: formData.get('password'),
@@ -22,19 +24,12 @@ export async function signInWithCredentials(
     if (isRedirectError(error)) {
       throw error;
     }
+
     return { success: false, message: 'Invalid email or password' };
   }
 }
 
 // Sign user out
 export async function signOutUser() {
-  // get current users cart and delete it so it does not persist to next user
-//   const currentCart = await getMyCart();
-
-//   if (currentCart?.id) {
-//     await prisma.cart.delete({ where: { id: currentCart.id } });
-//   } else {
-//     console.warn('No cart found for deletion.');
-//   }
   await signOut();
 }

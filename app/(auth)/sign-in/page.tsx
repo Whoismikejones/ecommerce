@@ -17,8 +17,20 @@ export const metadata: Metadata = {
   title: 'Sign In',
 };
 
-const SignInPage = () => {
-    return (
+const SignInPage = async (props: {
+  searchParams: Promise<{
+    callbackUrl: string;
+  }>;
+}) => {
+  const { callbackUrl } = await props.searchParams;
+
+  const session = await auth();
+
+  if (session) {
+    return redirect(callbackUrl || '/');
+  }
+
+  return (
     <div className='w-full max-w-md mx-auto'>
       <Card>
         <CardHeader className='space-y-4'>
@@ -43,6 +55,5 @@ const SignInPage = () => {
     </div>
   );
 };
-
 
 export default SignInPage;
