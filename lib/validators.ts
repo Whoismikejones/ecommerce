@@ -20,12 +20,15 @@ export const insertProductSchema = z.object({
  price: currency,
 });
 
-
 //Schema for signing users in
-
 //z.string().email() is deprecated in favor of z.email(). This is a design decision to encourage the use of dedicated, top-level schemas for common types like email, URL, and datetime. While the old methods may still work at runtime, the JSDoc in TypeScript will flag them as deprecated.
 export const signInFormSchema = z.object({
   email: z.email('Invalid email address').min(3, 'Email must be at least 3 characters'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
+//schema for signing up a user 
+export const signUpFormSchema = z.object({
+  email: z.email('Invalid email address').min(3, 'Email must be at least 3 characters'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+});
