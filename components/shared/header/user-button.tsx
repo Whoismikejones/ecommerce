@@ -16,7 +16,7 @@ const UserButton = async () => {
 
 
 
-
+    //if not loged in show sign in 
   if (!session) {
     return (
       <Button asChild>
@@ -27,6 +27,7 @@ const UserButton = async () => {
     );
   }
 
+  //ueser button to show first initial when logged in
   const firstInitial = session.user?.name?.charAt(0).toUpperCase() ?? 'U';
 
   return (
