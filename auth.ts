@@ -59,9 +59,7 @@ export const config = {
               role: user.role,
             };
           }
-        }
-
-        
+        }        
         // If user does not exist or password does not match return null
         //return null;
 
@@ -70,22 +68,8 @@ export const config = {
       },
     }),
   ],
- 
-  callbacks: {
-    //...authConfig.callbacks,
-    
-    async session({ session, user, trigger, token }: any) {
-        //Set the user id from the token 
-        session.user.id = token.sub;
-        //if there is an update, set the user name 
-        if(trigger === 'update'){
-            session.user.name = user.name;
-        }
-        return session; 
-    },
-  },
 
-   logger: {
+  logger: {
       error: (error: Error) => {
          // Don't log CredentialsSignin errors to avoid console spam
          if (error.message.includes('Invalid credentials') || error.name === 'CredentialsSignin') {
@@ -93,6 +77,43 @@ export const config = {
          }
          console.error('[auth][error]', error);
       },
+  },
+
+  callbacks: {
+    //...authConfig.callbacks,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async session({ session, user, trigger, token }: any) {
+        //Set the user id from the token 
+        session.user.id = token.sub;
+        session.user.role = token.role;
+        session.user.name = token.name; 
+
+        //console.log(token);
+        //if there is an update, set the user name 
+        if(trigger === 'update'){
+            session.user.name = user.name;
+        }
+        return session; 
+    },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       async jwt({ token, user, trigger, session }: any){
+        // Assign user fields to token
+        if (user){ 
+          token.role = user.role;
+
+          // If user has no name then use email 
+          if(user.name === 'NO_NAME') {
+            token.name = user.email!.split('@')[0];
+
+            // Update database to reflect the token name
+            await prisma.user.update({
+              where: { id: user.id },
+              data: {name: token.name}
+            })
+          }
+        }
+        return token;
+       }
    },
 
 }satisfies NextAuthConfig;
