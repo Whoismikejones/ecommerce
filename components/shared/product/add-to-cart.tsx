@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-//import { Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { CartItem } from "@/types";
 import { addItemToCart } from "@/lib/actions/cart.actions";
 import { toast } from "sonner"; // <-- Changed this import
@@ -23,19 +23,22 @@ const AddToCart = ({ item }: { item: CartItem }) => {
     // Handling success state of adding items to cart
     toast.success(`${item.name} added to cart`, {
       // Changed to use toast.success (dot notation)
-
       action: {
         label: "Go to Cart",
-
         onClick: () => router.push("/cart"),
       },
     });
   };
 
-  //not sure if needed
+  //add to cart button
   return (
-    <Button className="w-full" type="button" onClick={handleAddToCart}>
-    Add To Cart
+    <Button
+      className="w-full text-white hover:bg-gray-800"
+      type="button"
+      onClick={handleAddToCart}
+    >
+      <Plus />
+      Add To Cart
     </Button>
   );
 };
