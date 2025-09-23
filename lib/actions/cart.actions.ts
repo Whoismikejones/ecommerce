@@ -1,27 +1,42 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
-import { z } from 'zod';
-import { auth } from '@/auth';
-import { formatError } from '../utils';
-import { cartItemSchema, insertCartSchema } from '../validators';
-import { prisma } from '@/db/prisma';
-import { CartItem } from '@/types';
-import { Prisma } from '@prisma/client';
-import { convertToPlainObject } from '../utils';
+import { cookies } from "next/headers";
+import { CartItem } from "@/types";
+import { convertToPlainObject, formatError, round2 } from "../utils";
+import { auth } from "@/auth";
+import { prisma } from "@/db/prisma";
+import { cartItemSchema, insertCartSchema } from "../validators";
+import { revalidatePath } from "next/cache";
+import { Prisma } from "@prisma/client";
 
+// Calculate cart prices
+const calcPrice = (items: CartItem[]) => {
+  const itemsPrice = round2(
+      items.reduce((acc, item) => acc + Number(item.price) * item.qty, 0)
+    ),
+    //SET SHIPPING PRICE
+    shippingPrice = round2(itemsPrice > 100 ? 0 : 10),
+    taxPrice = round2(0.15 * itemsPrice),
+    totalPrice = round2(itemsPrice + taxPrice + shippingPrice);
+
+  return {
+    itemsPrice: itemsPrice.toFixed(2),
+    shippingPrice: shippingPrice.toFixed(2),
+    taxPrice: taxPrice.toFixed(2),
+    totalPrice: totalPrice.toFixed(2),
+  };
+};
 
 export async function addItemToCart(data: CartItem) {
   try {
     // Check for session cart cookie
-    const sessionCartId = (await cookies()).get('sessionCartId')?.value;
-    if (!sessionCartId) throw new Error('Cart Session not found');
+    const sessionCartId = (await cookies()).get("sessionCartId")?.value;
+    if (!sessionCartId) throw new Error("Cart Session not found");
 
     // Get session and user ID
     const session = await auth();
-    const userId = session?.user?.id ? (session.user.id as string) : undefined;
-     
+    const userId = session?.user?.id ? (session.user.id as string) : 
+    undefined;
 
     // Get cart
     const cart = await getMyCart();
@@ -31,30 +46,42 @@ export async function addItemToCart(data: CartItem) {
 
     // Find product in database
     const product = await prisma.product.findFirst({
-        where: { id: item.productId }
-    })
-    
-    // Testing
-    console.log({
-      'Session Cart ID': sessionCartId,
-      'User ID': userId,
-      'Item Reqested': item, 
-      'Product Found': product,
+      where: { id: item.productId },
     });
+    if (!product) throw new Error("Product not found");
+    if (!cart) {
+      // Create new cart object
+      const newCart = insertCartSchema.parse({
+        userId: userId,
+        items: [item],
+        sessionCartId: sessionCartId,
+        ...calcPrice([item]),
+      });
+      // Add to database
+      await prisma.cart.create({
+        data: newCart,
+      });
 
-    return {
-      success: true,
-      message: 'Testing Cart',
-    };
+      // Revalidate product page
+      revalidatePath(`/product/${product.slug}`);
+
+      return {
+        success: true,
+        message: "Item added to cart successfully",
+      };
+    }
   } catch (error) {
-    return { success: false, message: formatError(error) };
+    return {
+      success: false,
+      message: formatError(error),
+    };
   }
-};
+}
 
 export async function getMyCart() {
   // Check for cart cookie
-  const sessionCartId = (await cookies()).get('sessionCartId')?.value;
-  if (!sessionCartId) throw new Error('Cart session not found');
+  const sessionCartId = (await cookies()).get("sessionCartId")?.value;
+  if (!sessionCartId) throw new Error("Cart session not found");
 
   // Get session and user ID
   const session = await auth();

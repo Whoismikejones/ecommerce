@@ -138,8 +138,6 @@ export const config = {
 
         // Set newly generated sessionCartId in the response cookies
         response.cookies.set('sessionCartId', sessionCartId);
-        console.log(sessionCartId);
-
 
         return response;
       } else {
