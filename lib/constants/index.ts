@@ -20,3 +20,11 @@ export const LATEST_PRODUCTS_LIMIT =
     password: '',
     confirmPassword: '',
   };
+
+    export const shippingAddressDefaultValues = {
+    fullName: '',
+    streetAddress: '',
+    city: '',
+    postalCode: '',
+    country: '',
+  };
