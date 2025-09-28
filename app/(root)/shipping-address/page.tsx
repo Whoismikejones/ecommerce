@@ -4,7 +4,7 @@ import { getUserById } from '@/lib/actions/user.actions';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { ShippingAddress } from '@/types';
-// import ShippingAddressForm from './shipping-address-form';
+import ShippingAddressForm from './shipping-address-form';
 // import CheckoutSteps from '@/components/shared/checkout-steps';
 
 export const metadata: Metadata = {
@@ -22,12 +22,13 @@ const ShippingAddressPage = async () => {
 
   if (!userId) throw new Error('No user ID');
 
+  //pulling in user from db 
   const user = await getUserById(userId);
 
   return (
-    <> Address
-      {/* <CheckoutSteps current={1} />
-      <ShippingAddressForm address={user.address as ShippingAddress} /> */}
+    <>
+      {/* <CheckoutSteps current={1} /> */}
+      <ShippingAddressForm address={user.address as ShippingAddress} />
     </>
   );
 };

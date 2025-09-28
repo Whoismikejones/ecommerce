@@ -22,9 +22,11 @@ export const LATEST_PRODUCTS_LIMIT =
   };
 
     export const shippingAddressDefaultValues = {
+    // companyName: '',
     fullName: '',
+    companyName: '',
     streetAddress: '',
     city: '',
     postalCode: '',
-    country: '',
+    country: 'United States',
   };
