@@ -1,17 +1,13 @@
-"use client";
+'use client';
 
-import { SubmitHandler, useForm } from "react-hook-form";
-import { ShippingAddress } from "@/types";
-import { useRouter } from "next/navigation";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { shippingAddressSchema } from "@/lib/validators";
-import { ControllerRenderProps } from "react-hook-form";
-import { shippingAddressDefaultValues } from "@/lib/constants";
-import { useToast } from "@/hooks/use-toast";
-import { useTransition } from "react";
-// import { updateUserAddress } from '@/lib/actions/user.actions';
-// import CheckoutSteps from '@/components/shared/checkout-steps';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
+import { useTransition } from 'react';
+import { ShippingAddress } from '@/types';
+import { shippingAddressSchema } from '@/lib/validators';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ControllerRenderProps, useForm, SubmitHandler } from 'react-hook-form';
+import { z } from 'zod';
 import {
   Form,
   FormControl,
@@ -19,10 +15,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Loader } from "lucide-react";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, Loader } from 'lucide-react';
+import { updateUserAddress } from '@/lib/actions/user.actions';
+import { shippingAddressDefaultValues } from '@/lib/constants';
 
 const ShippingAddressForm = ({
   address,
@@ -39,8 +37,22 @@ const ShippingAddressForm = ({
 
   const [isPending, startTransition] = useTransition();
 
-  const onSubmit = (values) => {
-    console.log(values);
+  const onSubmit: SubmitHandler<z.infer<typeof shippingAddressSchema>> = async (
+    values
+  ) => {
+    startTransition(async () => {
+      const res = await updateUserAddress(values);
+
+      if (!res.success) {
+        toast({
+          variant: "destructive",
+          description: res.message,
+        });
+        return;
+      }
+
+      router.push("/payment-method");
+    });
   };
 
   return (
@@ -93,10 +105,7 @@ const ShippingAddressForm = ({
                   <FormItem className="w-full">
                     <FormLabel>Company Name</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Optional"
-                        {...field}
-                      />
+                      <Input placeholder="Optional" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -146,7 +155,7 @@ const ShippingAddressForm = ({
                   </FormItem>
                 )}
               />
-              </div>
+            </div>
             <div className="flex flex-col gap-3 md:flex-row">
               <FormField
                 control={form.control}
@@ -168,7 +177,7 @@ const ShippingAddressForm = ({
                   </FormItem>
                 )}
               />
-              </div>
+            </div>
             <div className="flex flex-col gap-3 md:flex-row">
               <FormField
                 control={form.control}
