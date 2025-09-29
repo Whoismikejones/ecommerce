@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { uppercase, z } from 'zod';
 import { formatNumberWithDecimal } from './utils';
 
 
@@ -64,4 +64,19 @@ export const insertCartSchema = z.object({
   taxPrice: currency,
   sessionCartId: z.string().min(1, 'Session cart id is required'),
   userId: z.string().optional().nullable(),
+});
+
+// Schema for the shipping address
+//lat,lng - able to utilize for a map
+export const shippingAddressSchema = z.object({
+  fullName: z.string().min(3, 'Name must be at least 3 characters'),
+  companyName: z.string().min(2, 'Company name must be at least 2 characters').optional(),
+  streetAddress: z.string().min(3, 'Enter valid address'),
+  secondaryAddress: z.string().trim().optional(),
+  city: z.string().min(3, 'City must be at least 3 characters'),
+  state: z.string().min(2, 'State must be at least 2 characters').toUpperCase(),
+  postalCode: z.string().trim().regex(/^\d{5}(-\d{4})?$/, "Invalid postal code format"),
+  country: z.string().min(3, 'Enter a valid shipping country'),
+  lat: z.number().optional(),
+  lng: z.number().optional(),
 });

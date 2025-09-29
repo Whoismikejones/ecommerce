@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatCurrency } from '@/lib/utils';
 
-/*Check Out*/
+/*Shopping Cart Page*/
 
 const CartTable = ({ cart }: { cart?: Cart }) => {
   const router = useRouter();
