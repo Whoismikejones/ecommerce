@@ -36,7 +36,7 @@ export const PAYMENT_METHODS = process.env.PAYMENT_METHODS
   ? process.env.PAYMENT_METHODS.split(", ")
   : ["Pay Pal", "Stripe", "Cash On Delivery", "Credit Card"];
 export const DEFAULT_PAYMENT_METHOD =
-  process.env.DEFAULT_PAYMENT_METHOD || "PayPal";
+  process.env.DEFAULT_PAYMENT_METHOD || "Pay Pal";
 
 export const PAGE_SIZE = Number(process.env.PAGE_SIZE) || 12;
 
