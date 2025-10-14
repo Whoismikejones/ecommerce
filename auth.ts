@@ -150,7 +150,7 @@ export const config = {
                   id: sessionCart.id,
                   userId: user.id,
                   sessionCartId: sessionCartId,
-                  items: sessionCart.items as CartItem[],
+                  // items: sessionCart.items as CartItem[],
                   itemsPrice: sessionCart.itemsPrice,
                   totalPrice: sessionCart.totalPrice,
                   shippingPrice: sessionCart.shippingPrice,

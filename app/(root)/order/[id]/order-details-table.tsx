@@ -24,21 +24,19 @@ import {
 import {
   createPayPalOrder,
   approvePayPalOrder,
-  updateOrderToPaidCOD,
-  deliverOrder,
+  // updateOrderToPaidCOD,
+  // deliverOrder,
 } from '@/lib/actions/order.actions';
-import StripePayment from './stripe-payment';
+// import StripePayment from './stripe-payment';
 
 const OrderDetailsTable = ({
   order,
   paypalClientId,
-  isAdmin,
-  stripeClientSecret,
+ 
 }: {
   order: Omit<Order, 'paymentResult'>;
   paypalClientId: string;
-  isAdmin: boolean;
-  stripeClientSecret: string | null;
+
 }) => {
   const {
     id,
@@ -57,17 +55,6 @@ const OrderDetailsTable = ({
 
   const { toast } = useToast();
 
-  const PrintLoadingState = () => {
-    const [{ isPending, isRejected }] = usePayPalScriptReducer();
-    let status = '';
-
-    if (isPending) {
-      status = 'Loading PayPal...';
-    } else if (isRejected) {
-      status = 'Error Loading PayPal';
-    }
-    return status;
-  };
 
   const handleCreatePayPalOrder = async () => {
     const res = await createPayPalOrder(order.id);
@@ -91,53 +78,66 @@ const OrderDetailsTable = ({
     });
   };
 
-  // Button to mark order as paid
-  const MarkAsPaidButton = () => {
-    const [isPending, startTransition] = useTransition();
-    const { toast } = useToast();
+  // // Button to mark order as paid
+  // const MarkAsPaidButton = () => {
+  //   const [isPending, startTransition] = useTransition();
+  //   const { toast } = useToast();
 
-    return (
-      <Button
-        type='button'
-        disabled={isPending}
-        onClick={() =>
-          startTransition(async () => {
-            const res = await updateOrderToPaidCOD(order.id);
-            toast({
-              variant: res.success ? 'default' : 'destructive',
-              description: res.message,
-            });
-          })
-        }
-      >
-        {isPending ? 'processing...' : 'Mark As Paid'}
-      </Button>
-    );
-  };
+  //   return (
+  //     <Button
+  //       type='button'
+  //       disabled={isPending}
+  //       onClick={() =>
+  //         startTransition(async () => {
+  //           const res = await updateOrderToPaidCOD(order.id);
+  //           toast({
+  //             variant: res.success ? 'default' : 'destructive',
+  //             description: res.message,
+  //           });
+  //         })
+  //       }
+  //     >
+  //       {isPending ? 'processing...' : 'Mark As Paid'}
+  //     </Button>
+  //   );
+  // };
 
-  // Button to mark order as delivered
-  const MarkAsDeliveredButton = () => {
-    const [isPending, startTransition] = useTransition();
-    const { toast } = useToast();
+  // // Button to mark order as delivered
+  // const MarkAsDeliveredButton = () => {
+  //   const [isPending, startTransition] = useTransition();
+  //   const { toast } = useToast();
 
-    return (
-      <Button
-        type='button'
-        disabled={isPending}
-        onClick={() =>
-          startTransition(async () => {
-            const res = await deliverOrder(order.id);
-            toast({
-              variant: res.success ? 'default' : 'destructive',
-              description: res.message,
-            });
-          })
-        }
-      >
-        {isPending ? 'processing...' : 'Mark As Delivered'}
-      </Button>
-    );
-  };
+  //   return (
+  //     <Button
+  //       type='button'
+  //       disabled={isPending}
+  //       onClick={() =>
+  //         startTransition(async () => {
+  //           const res = await deliverOrder(order.id);
+  //           toast({
+  //             variant: res.success ? 'default' : 'destructive',
+  //             description: res.message,
+  //           });
+  //         })
+  //       }
+  //     >
+  //       {isPending ? 'processing...' : 'Mark As Delivered'}
+  //     </Button>
+  //   );
+  // };
+
+  
+// Checks the loading status of the PayPal script
+function PrintLoadingState() {
+  const [{ isPending, isRejected }] = usePayPalScriptReducer();
+  let status = '';
+  if (isPending) {
+    status = 'Loading PayPal...';
+  } else if (isRejected) {
+    status = 'Error in loading PayPal.';
+  }
+  return status;
+}
 
   return (
     <>
@@ -234,7 +234,8 @@ const OrderDetailsTable = ({
                 <div>Total</div>
                 <div>{formatCurrency(totalPrice)}</div>
               </div>
-
+              {/*****Payment Methods*****/}    
+              
               {/* PayPal Payment */}
               {!isPaid && paymentMethod === 'PayPal' && (
                 <div>
@@ -248,20 +249,20 @@ const OrderDetailsTable = ({
                 </div>
               )}
 
-              {/* Stripe Payment */}
+              {/* Stripe Payment
               {!isPaid && paymentMethod === 'Stripe' && stripeClientSecret && (
                 <StripePayment
                   priceInCents={Number(order.totalPrice) * 100}
                   orderId={order.id}
                   clientSecret={stripeClientSecret}
                 />
-              )}
+              )} */}
 
-              {/* Cash On Delivery */}
+              {/* Cash On Delivery
               {isAdmin && !isPaid && paymentMethod === 'CashOnDelivery' && (
                 <MarkAsPaidButton />
               )}
-              {isAdmin && isPaid && !isDelivered && <MarkAsDeliveredButton />}
+              {isAdmin && isPaid && !isDelivered && <MarkAsDeliveredButton />} */}
             </CardContent>
           </Card>
         </div>
