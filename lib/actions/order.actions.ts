@@ -268,34 +268,34 @@ export async function updateOrderToPaid({
 //     },
 //   });
 // }
+}
+// Get user's orders
+export async function getMyOrders({
+  limit = PAGE_SIZE,
+  page,
+}: {
+  limit?: number;
+  page: number;
+}) {
+  const session = await auth();
+  if (!session) throw new Error('User is not authorized');
 
-// // Get user's orders
-// export async function getMyOrders({
-//   limit = PAGE_SIZE,
-//   page,
-// }: {
-//   limit?: number;
-//   page: number;
-// }) {
-//   const session = await auth();
-//   if (!session) throw new Error('User is not authorized');
+  const data = await prisma.order.findMany({
+    where: { userId: session?.user?.id },
+    orderBy: { createdAt: 'desc' },
+    take: limit,
+    skip: (page - 1) * limit,
+  });
 
-//   const data = await prisma.order.findMany({
-//     where: { userId: session?.user?.id },
-//     orderBy: { createdAt: 'desc' },
-//     take: limit,
-//     skip: (page - 1) * limit,
-//   });
+  const dataCount = await prisma.order.count({
+    where: { userId: session?.user?.id },
+  });
 
-//   const dataCount = await prisma.order.count({
-//     where: { userId: session?.user?.id },
-//   });
-
-//   return {
-//     data,
-//     totalPages: Math.ceil(dataCount / limit),
-//   };
-// }
+  return {
+    data,
+    totalPages: Math.ceil(dataCount / limit),
+  };
+} //Might have to edit this brace
 
 // type SalesDataType = {
 //   month: string;
@@ -442,4 +442,3 @@ export async function updateOrderToPaid({
 //     return { success: false, message: formatError(error) };
 //   }
 // }
-};
