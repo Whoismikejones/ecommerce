@@ -6,16 +6,14 @@ import { ThemeProvider } from 'next-themes';
 import { Toaster } from 'sonner';
 
 
-
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: {
-    template: `%s | Prostore`,
-    default: APP_NAME, 
+    template: `%s | Snap-Controls`,
+    default: APP_NAME,
   },
-   description: APP_DESCRIPTION,
-   
+  description: APP_DESCRIPTION,
   metadataBase: new URL(SERVER_URL),
 };
 
@@ -25,19 +23,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.className} antialiased`}>
-          <ThemeProvider
+    <html lang='en' suppressHydrationWarning>
+      <body className={`${inter.className} antialiased`}>
+        <ThemeProvider
           attribute='class'
           defaultTheme='light'
           enableSystem
           disableTransitionOnChange
-          >
-             {children}
-             <Toaster richColors/>  
-          </ThemeProvider>
-         
+        >
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

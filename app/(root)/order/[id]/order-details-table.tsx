@@ -32,10 +32,12 @@ import {
 const OrderDetailsTable = ({
   order,
   paypalClientId,
+  isAdmin
  
 }: {
   order: Omit<Order, 'paymentResult'>;
   paypalClientId: string;
+  isAdmin:  boolean;
 
 }) => {
   const {
