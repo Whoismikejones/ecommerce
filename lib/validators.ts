@@ -1,13 +1,13 @@
-import { uppercase, z } from 'zod';
+import { z } from 'zod';
 import { formatNumberWithDecimal } from './utils';
 import { PAYMENT_METHODS } from './constants';
 
-//ZOD VALIDATORS 
-
-
 const currency = z
-    .string()
-    .refine((value) => /^\d+(\.\d{2})?$/.test(formatNumberWithDecimal(Number(value))),'Price must have exactly two decimal places');
+  .string()
+  .refine(
+    (value) => /^\d+(\.\d{2})?$/.test(formatNumberWithDecimal(Number(value))),
+    'Price must have exactly two decimal places'
+  );
 
 // Schema for inserting products
 export const insertProductSchema = z.object({
@@ -20,13 +20,17 @@ export const insertProductSchema = z.object({
   images: z.array(z.string()).min(1, 'Product must have at least one image'),
   isFeatured: z.boolean(),
   banner: z.string().nullable(),
- price: currency,
+  price: currency,
 });
 
-//Schema for signing users in
-//z.string().email() is deprecated in favor of z.email(). This is a design decision to encourage the use of dedicated, top-level schemas for common types like email, URL, and datetime. While the old methods may still work at runtime, the JSDoc in TypeScript will flag them as deprecated.
+// Schema for updating products
+export const updateProductSchema = insertProductSchema.extend({
+  id: z.string().min(1, 'Id is required'),
+});
+
+// Schema for signing users in
 export const signInFormSchema = z.object({
-  email: z.email('Invalid email address').min(3, 'Email must be at least 3 characters'),
+  email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
@@ -40,14 +44,12 @@ export const signUpFormSchema = z
       .string()
       .min(6, 'Confirm password must be at least 6 characters'),
   })
-  //refine will comapre password and confirmPassword to ensure mathcing
   .refine((data) => data.password === data.confirmPassword, {
-    //if error display
     message: "Passwords don't match",
     path: ['confirmPassword'],
   });
 
-  // Cart Schemas
+// Cart Schemas
 export const cartItemSchema = z.object({
   productId: z.string().min(1, 'Product is required'),
   name: z.string().min(1, 'Name is required'),
@@ -57,8 +59,6 @@ export const cartItemSchema = z.object({
   price: currency,
 });
 
-//Vercel issue 
-//Type error: Module '"@/lib/validators"' has no exported member 'insertCartSchema'.
 export const insertCartSchema = z.object({
   items: z.array(cartItemSchema),
   itemsPrice: currency,
@@ -85,7 +85,6 @@ export const shippingAddressSchema = z.object({
 });
 
 // Schema for payment method
-//only Payment methods from the constants file can be used
 export const paymentMethodSchema = z
   .object({
     type: z.string().min(1, 'Payment method is required'),
@@ -150,4 +149,3 @@ export const insertReviewSchema = z.object({
     .min(1, 'Rating must be at least 1')
     .max(5, 'Rating must be at most 5'),
 });
-

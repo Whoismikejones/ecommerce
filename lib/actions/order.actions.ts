@@ -399,7 +399,6 @@ export async function deleteOrder(id: string) {
   }
 }
 
-
 //CASH ON DELIVERY *************************************
 
 // Update COD order to paid
