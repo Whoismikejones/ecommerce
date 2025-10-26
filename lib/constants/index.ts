@@ -23,7 +23,6 @@ export const signUpDefaultValues = {
 };
 
 export const shippingAddressDefaultValues = {
-  // companyName: '',
   fullName: "",
   companyName: "",
   streetAddress: "",
