@@ -2,6 +2,8 @@ import { z } from 'zod';
 import { formatNumberWithDecimal } from './utils';
 import { PAYMENT_METHODS } from './constants';
 
+//ZOD Configuration file 
+
 const currency = z
   .string()
   .refine(
@@ -143,7 +145,7 @@ export const insertReviewSchema = z.object({
   description: z.string().min(3, 'Description must be at least 3 characters'),
   productId: z.string().min(1, 'Product is required'),
   userId: z.string().min(1, 'User is required'),
-  rating: z.coerce
+  rating: z
     .number()
     .int()
     .min(1, 'Rating must be at least 1')
