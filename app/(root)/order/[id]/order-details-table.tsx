@@ -1,3 +1,4 @@
+
 'use client';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -24,22 +25,21 @@ import {
 import {
   createPayPalOrder,
   approvePayPalOrder,
-  //COD FUNCTIONALITY: 
   updateOrderToPaidCOD,
   deliverOrder,
 } from '@/lib/actions/order.actions';
-// import StripePayment from './stripe-payment';
+import StripePayment from './stripe-payment';
 
 const OrderDetailsTable = ({
   order,
   paypalClientId,
-  isAdmin
- 
+  isAdmin,
+  stripeClientSecret,
 }: {
   order: Omit<Order, 'paymentResult'>;
   paypalClientId: string;
-  isAdmin:  boolean;
-
+  isAdmin: boolean;
+  stripeClientSecret: string | null;
 }) => {
   const {
     id,
@@ -58,6 +58,17 @@ const OrderDetailsTable = ({
 
   const { toast } = useToast();
 
+  const PrintLoadingState = () => {
+    const [{ isPending, isRejected }] = usePayPalScriptReducer();
+    let status = '';
+
+    if (isPending) {
+      status = 'Loading PayPal...';
+    } else if (isRejected) {
+      status = 'Error Loading PayPal';
+    }
+    return status;
+  };
 
   const handleCreatePayPalOrder = async () => {
     const res = await createPayPalOrder(order.id);
@@ -128,19 +139,6 @@ const OrderDetailsTable = ({
       </Button>
     );
   };
-
-  
-// Checks the loading status of the PayPal script
-function PrintLoadingState() {
-  const [{ isPending, isRejected }] = usePayPalScriptReducer();
-  let status = '';
-  if (isPending) {
-    status = 'Loading PayPal...';
-  } else if (isRejected) {
-    status = 'Error in loading PayPal.';
-  }
-  return status;
-}
 
   return (
     <>
@@ -237,8 +235,7 @@ function PrintLoadingState() {
                 <div>Total</div>
                 <div>{formatCurrency(totalPrice)}</div>
               </div>
-              {/*****Payment Methods*****/}    
-              
+
               {/* PayPal Payment */}
               {!isPaid && paymentMethod === 'PayPal' && (
                 <div>
@@ -252,17 +249,17 @@ function PrintLoadingState() {
                 </div>
               )}
 
-              {/* Stripe Payment
+              {/* Stripe Payment */}
               {!isPaid && paymentMethod === 'Stripe' && stripeClientSecret && (
                 <StripePayment
                   priceInCents={Number(order.totalPrice) * 100}
                   orderId={order.id}
                   clientSecret={stripeClientSecret}
                 />
-              )} */}
+              )}
 
-              {/* Cash On Delivery
-              {isAdmin && !isPaid && paymentMethod === 'CashOnDelivery' && (
+              {/* Cash On Delivery */}
+              {/* {isAdmin && !isPaid && paymentMethod === 'CashOnDelivery' && (
                 <MarkAsPaidButton />
               )}
               {isAdmin && isPaid && !isDelivered && <MarkAsDeliveredButton />} */}
