@@ -195,6 +195,7 @@ export const config = {
         /\/user\/(.*)/,
         /\/order\/(.*)/,
         /\/admin/,
+        // /\/customer-service/,
       ];
       //get path name from request URL object
      const { pathname } = request.nextUrl;

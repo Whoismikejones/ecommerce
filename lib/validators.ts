@@ -82,8 +82,8 @@ export const shippingAddressSchema = z.object({
   state: z.string().min(2, 'State must be at least 2 characters').toUpperCase(),
   postalCode: z.string().trim().regex(/^\d{5}(-\d{4})?$/, "Invalid postal code format"),
   country: z.string().min(3, 'Enter a valid shipping country'),
-  lat: z.number().optional(),
-  lng: z.number().optional(),
+  // lat: z.number().optional(),
+  // lng: z.number().optional(),
 });
 
 // Schema for payment method
@@ -108,6 +108,9 @@ export const insertOrderSchema = z.object({
   }),
   shippingAddress: shippingAddressSchema,
 });
+
+
+
 
 // Schema for inserting an order item
 export const insertOrderItemSchema = z.object({
