@@ -1,7 +1,9 @@
-// import { ContactForm } from "@/components/contact-form"
+import  ContactForm  from "./contact-form"
 
-const customerServivce = () => {
-    return <>Customer Service Form</>;
+export default function Home() {
+  return (
+    <div className="flex flex-col p-24 justify-center items-center h-screen">
+      <ContactForm />
+    </div>
+  );
 }
- 
-export default customerServivce;

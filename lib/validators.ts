@@ -154,3 +154,12 @@ export const insertReviewSchema = z.object({
     .min(1, 'Rating must be at least 1')
     .max(5, 'Rating must be at most 5'),
 });
+
+//customer service email 
+export const emailFormSchema = z.object({
+  firstName: z.string().min(2, 'Please enter your first name').max(50),
+  lastName: z.string().min(2, 'Please enter your last name').max(50),
+  companyName: z.string().optional(),
+  email: z.string().email("Invalid email address format."),
+  message: z.string().min(2, 'Please enter a message for customer support'),
+});

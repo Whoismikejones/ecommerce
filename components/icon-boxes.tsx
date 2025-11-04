@@ -2,8 +2,6 @@ import { DollarSign, Headset, ShoppingBag, WalletCards } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 import Link from "next/link";
 
-
-
 const IconBoxes = () => {
   return (
     <div>
@@ -34,12 +32,12 @@ const IconBoxes = () => {
             <Headset />
             <div className="text-sm font-bold">Customer Support</div>
             <div className="text-sm">
-               <Link
-    href="/customer-service"
-    className="text-primary hover:underline"
-  >
-    Contact Us!
-  </Link>
+              <Link
+                href="/customer-service"
+                className="text-primary hover:underline"
+              >
+                Contact Us!
+              </Link>
             </div>
           </div>
         </CardContent>
